@@ -3,9 +3,6 @@ pipeline {
   tools {
     maven 'Maven 3.9.11'
   }
-  environment {
-    GIT_SHORT_COMMIT = ''
-  }
   stages {
     stage('Build') {
       steps {
