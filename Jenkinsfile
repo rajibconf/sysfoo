@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    maven 'Maven 3.6.1'
+    maven 'Maven 3.9.11'
   }
   stages {
     stage('Build') {
@@ -27,7 +27,7 @@ pipeline {
 
         echo 'Packaging...'
         sh 'mvn -f pom.xml package -DskipTests'
-        archiveArtifacts artifacts: '**/target/*.jar', fingerprints: true
+        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
     }
   }
