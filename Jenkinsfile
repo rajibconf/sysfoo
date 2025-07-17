@@ -19,9 +19,9 @@ pipeline {
     stage('Package') {
       steps {
         echo 'Truncating...'
-        # Truncate the GIT_COMMIT to the first 7 characters
+        // Truncate the GIT_COMMIT to the first 7 characters
         sh 'GIT_SHORT_COMMIT=$(echo $GIT_COMMIT | cut -c 1-7)'
-        # Set the version using Maven
+        // Set the version using Maven
         sh 'mvn versions:set -DnewVersion="$GIT_SHORT_COMMIT"'
         sh 'mvn versions:commit'
 
