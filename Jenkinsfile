@@ -3,6 +3,9 @@ pipeline {
   tools {
     maven 'Maven 3.9.11'
   }
+  environment {
+    GIT_SHORT_COMMIT = ''
+  }
   stages {
     stage('Build') {
       steps {
@@ -18,15 +21,18 @@ pipeline {
     }
     stage('Package') {
       steps {
-        echo 'Truncating...'
-        // Truncate the GIT_COMMIT to the first 7 characters
-        sh 'GIT_SHORT_COMMIT=$(echo $GIT_COMMIT | cut -c 1-7)'
-        // Set the version using Maven
-        sh 'mvn versions:set -DnewVersion="$GIT_SHORT_COMMIT"'
-        sh 'mvn versions:commit'
-
-        echo 'Packaging...'
-        sh 'mvn -f pom.xml package -DskipTests'
+        echo 'Truncating and Packaging...'
+        sh '''
+          GIT_SHORT_COMMIT=$(echo $GIT_COMMIT | cut -c 1-7)
+          echo "Short commit: $GIT_SHORT_COMMIT"
+    
+          # Set the version to the short commit
+          mvn versions:set -DnewVersion=$GIT_SHORT_COMMIT
+          mvn versions:commit
+    
+          # Package the JAR
+          mvn -f pom.xml package -DskipTests
+        '''
         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
     }
